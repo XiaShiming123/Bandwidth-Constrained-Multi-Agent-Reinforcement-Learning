@@ -1,0 +1,86 @@
+# 默认配置文件
+# 面向受限环境的集成自适应多智能体通信与协作框架
+
+# 实验设置
+experiment:
+  env: "MPE_Navigation"  # 环境名称
+  output_dir: "results"  # 输出目录
+  device: "cpu"  # 设备，自动检测GPU
+
+# 环境设置
+environment:
+  max_steps: 200  # 最大步数（增加至200以提供更多学习时间）
+  step_mul: 8  # SMAC环境步长乘数
+  difficulty: "7"  # SMAC难度
+  replay_dir: "replays"  # SMAC回放目录
+
+# 通信约束
+communication:
+  bandwidth_limit: 10.0  # 带宽限制 (KB/步)
+  latency: 1  # 延迟 (步)
+  packet_loss: 0.1  # 丢包概率
+
+# 训练设置
+training:
+  num_episodes: 5000  # 训练回合数（增加至5000以提供更多学习时间）
+  max_steps: 200  # 每回合最大步数（增加至200）
+  buffer_size: 2048  # 经验缓冲区大小
+  batch_size: 64  # 批量大小
+  gamma: 0.99  # 折扣因子
+  gae_lambda: 0.95  # GAE lambda
+  ppo_clip: 0.2  # PPO clip参数
+  value_coef: 0.5  # 值函数损失系数
+  entropy_coef: 0.05  # 熵正则化系数（增加至0.05以促进探索）
+  max_grad_norm: 0.5  # 梯度裁剪
+  learning_rate: 5e-4  # 学习率（增加至5e-4以加快学习速度）
+  log_interval: 10  # 日志间隔
+
+# 评估设置
+evaluation:
+  num_episodes: 10  # 评估回合数
+  success_threshold: 0.0  # 成功阈值（累计奖励）- 设置为0.0以匹配新的奖励函数
+
+# MAPPO算法设置
+mappo:
+  critic_hidden_dim: 128  # Critic网络隐藏层维度
+
+# IACN算法设置
+iacn:
+  comm_freq_base: 0.3  # 基础通信频率
+  comm_freq_var: 0.5  # 通信频率方差系数
+  topology_type: "nearest"  # 拓扑类型: full, nearest, random
+
+# SparseComm算法设置
+sparse_comm:
+  k_neighbors: 2  # 最近邻数量
+  comm_frequency: 3  # 通信频率（每N步）
+
+# FullComm算法设置
+full_comm:
+  comm_every_step: true  # 每步都通信
+
+# AdaptiveComm算法设置
+adaptive_comm:
+  comm_dim: 8  # 通信消息维度 (与论文一致：瓶颈维度 8)
+  comm_cost_coef: 0.1  # 通信成本系数
+  sparsity_threshold: 0.3  # 稀疏度阈值
+  topology_update_freq: 10  # 拓扑更新频率
+  base_neighbors: 2  # 基础邻居数量
+  # 动态阈值参数
+  base_threshold: 0.5  # 基础阈值τ₀
+  threshold_alpha: 0.3  # 资源压力敏感度
+  threshold_beta: 0.3  # 任务紧急度敏感度
+  # 频率控制参数
+  freq_threshold: 0.5  # 通信频率阈值
+
+# 日志设置
+logging:
+  level: "INFO"  # 日志级别
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "experiment.log"  # 日志文件
+
+# 可视化设置
+visualization:
+  save_figures: true  # 是否保存图表
+  figure_format: "png"  # 图表格式
+  dpi: 300  # 图表分辨率
